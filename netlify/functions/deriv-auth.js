@@ -30,7 +30,9 @@ exports.handler = async function () {
   return {
     statusCode: 302,
     headers: {
-      Location: url.toString(),
+      Location: url.toString()
+    },
+    multiValueHeaders: {
       "Set-Cookie": [
         `deriv_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax`,
         `deriv_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Lax`
