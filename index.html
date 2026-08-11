@@ -90,7 +90,9 @@ footer{padding:30px 7%;border-top:1px solid #1c2b40;color:#8fa0b7}
 <h2>Connect Deriv</h2>
 <div class="card">
   <p>Secure account authorization should redirect the user to Deriv. MDV Traders should never ask users for their Deriv password.</p>
-  <button class="btn" onclick="alert('<a class="btn" href="/.netlify/functions/deriv-auth">Connect Deriv</a>')">Connect Deriv</button>
+  <button class="btn" onclick="window.location.href='/.netlify/functions/deriv-auth'">
+  Connect Deriv
+  </button>
   <p class="disclaimer">Live OAuth/API integration is intentionally not activated in this starter build until your Deriv application credentials and HTTPS callback URL are configured.</p>
 </div>
 </section>
