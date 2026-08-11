@@ -1,21 +1,20 @@
+const crypto = require("crypto");
+
 exports.handler = async function () {
   const clientId = "345iAqpGETySihqIPbSK5";
   const redirectUri =
     "https://mdvtraders.netlify.app/.netlify/functions/deriv-callback";
 
-  // PKCE verifier
-  const bytes = crypto.getRandomValues(new Uint8Array(32));
-  const codeVerifier = Buffer.from(bytes).toString("base64url");
+  const bytes = crypto.randomBytes(32);
+  const codeVerifier = bytes.toString("base64url");
 
-  // PKCE challenge
-  const hash = await crypto.subtle.digest(
-    "SHA-256",
-    new TextEncoder().encode(codeVerifier)
-  );
+  const hash = crypto
+    .createHash("sha256")
+    .update(codeVerifier)
+    .digest();
 
-  const codeChallenge = Buffer.from(hash).toString("base64url");
+  const codeChallenge = hash.toString("base64url");
 
-  // CSRF protection
   const state = crypto.randomUUID();
 
   const url = new URL("https://auth.deriv.com/oauth2/auth");
@@ -35,7 +34,7 @@ exports.handler = async function () {
       "Set-Cookie": [
         `deriv_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax`,
         `deriv_verifier=${codeVerifier}; Path=/; HttpOnly; Secure; SameSite=Lax`
-      ].join(", ")
+      ]
     }
   };
 };
