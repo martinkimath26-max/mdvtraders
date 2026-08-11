@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MDV Traders</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#07111f;color:#eef5ff}
+header{padding:18px 7%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1c2b40;position:sticky;top:0;background:#07111fee;backdrop-filter:blur(8px);z-index:2}
+.logo{font-size:24px;font-weight:800}.logo span{color:#32d583}nav a{color:#b9c7d9;text-decoration:none;margin-left:20px}
+.hero{padding:75px 7%;display:grid;grid-template-columns:1.2fr .8fr;gap:35px;align-items:center}
+h1{font-size:52px;line-height:1.05;margin:0 0 18px}.green{color:#32d583}.hero p{color:#aebbd0;font-size:18px;line-height:1.6}
+.btn{display:inline-block;padding:13px 20px;border-radius:10px;text-decoration:none;font-weight:700;margin:8px 8px 0 0;background:#32d583;color:#06131d}.btn.alt{background:#132238;color:#eef5ff;border:1px solid #263852}
+.card{background:#0d1a2b;border:1px solid #20324b;border-radius:16px;padding:22px;box-shadow:0 15px 35px #0003}
+.ticker{display:flex;justify-content:space-between;padding:15px 0;border-bottom:1px solid #20324b}.up{color:#32d583}.down{color:#ff6b7a}
+section{padding:50px 7%}h2{font-size:32px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.signal{font-size:20px;font-weight:800}.tag{display:inline-block;padding:5px 9px;border-radius:20px;background:#143326;color:#32d583;font-size:12px;margin-bottom:12px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.stat b{font-size:26px;display:block;margin-top:8px}
+footer{padding:30px 7%;border-top:1px solid #1c2b40;color:#8fa0b7}
+.disclaimer{font-size:12px;color:#7f91aa;line-height:1.6}
+@media(max-width:800px){.hero{grid-template-columns:1fr}h1{font-size:40px}.grid,.stats{grid-template-columns:1fr 1fr}nav{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">MDV <span>TRADERS</span></div>
+  <nav><a href="#signals">Signals</a><a href="#markets">Markets</a><a href="#auto">Auto Trader</a><a href="#login">Connect Deriv</a></nav>
+</header>
+
+<main>
+<section class="hero">
+  <div>
+    <div class="tag">DERIV SIGNALS + AUTOMATED TRADING</div>
+    <h1>Trade smarter with <span class="green">MDV Traders.</span></h1>
+    <p>One dashboard for signals, market monitoring and automated trading across supported Deriv contracts.</p>
+    <a class="btn" href="#login">Connect Deriv Account</a>
+    <a class="btn alt" href="#signals">View Signals</a>
+  </div>
+  <div class="card">
+    <h3>Live Market Snapshot</h3>
+    <div class="ticker"><span>Volatility 75</span><b class="up">+1.28%</b></div>
+    <div class="ticker"><span>EUR/USD</span><b class="down">-0.42%</b></div>
+    <div class="ticker"><span>Volatility 50</span><b class="up">+0.73%</b></div>
+    <div class="ticker"><span>Digit Index</span><b class="up">+0.16%</b></div>
+  </div>
+</section>
+
+<section id="signals">
+<h2>Trading Signals</h2>
+<div class="grid">
+  <div class="card"><span class="tag">DIGITS</span><div class="signal">Matches</div><p>Digit target: 7</p><b class="up">CALL / MATCH</b></div>
+  <div class="card"><span class="tag">DIGITS</span><div class="signal">Differs</div><p>Target digit: 3</p><b class="up">CALL / DIFFER</b></div>
+  <div class="card"><span class="tag">DIGITS</span><div class="signal">Even</div><p>Last-digit analysis</p><b class="up">EVEN</b></div>
+  <div class="card"><span class="tag">DIGITS</span><div class="signal">Odd</div><p>Last-digit analysis</p><b class="up">ODD</b></div>
+  <div class="card"><span class="tag">RANGE</span><div class="signal">Over</div><p>Barrier: 5</p><b class="up">OVER</b></div>
+  <div class="card"><span class="tag">RANGE</span><div class="signal">Under</div><p>Barrier: 7</p><b class="up">UNDER</b></div>
+  <div class="card"><span class="tag">DIRECTION</span><div class="signal">Rise</div><p>Short-term setup</p><b class="up">RISE</b></div>
+  <div class="card"><span class="tag">DIRECTION</span><div class="signal">Fall</div><p>Short-term setup</p><b class="down">FALL</b></div>
+</div>
+</section>
+
+<section id="markets">
+<h2>Markets</h2>
+<div class="grid">
+  <div class="card">Volatility Indices</div><div class="card">Forex</div>
+  <div class="card">Digits Contracts</div><div class="card">Other Supported Contracts</div>
+</div>
+</section>
+
+<section id="auto">
+<h2>Automated Trading</h2>
+<div class="card">
+  <h3>MDV Auto Trader</h3>
+  <p>Select a market, contract type and risk settings, then start or stop your authorized strategy.</p>
+  <button class="btn" onclick="toggleBot()">Start Bot</button>
+  <span id="bot" class="tag">BOT STOPPED</span>
+  <p class="disclaimer">This demo interface does not place trades. Live trading requires a secure Deriv authorization and backend API integration.</p>
+</div>
+</section>
+
+<section>
+<h2>Performance Dashboard</h2>
+<div class="stats">
+  <div class="card">Total trades<b>0</b></div><div class="card">Wins<b>0</b></div>
+  <div class="card">Losses<b>0</b></div><div class="card">P/L<b>$0.00</b></div>
+</div>
+</section>
+
+<section id="login">
+<h2>Connect Deriv</h2>
+<div class="card">
+  <p>Secure account authorization should redirect the user to Deriv. MDV Traders should never ask users for their Deriv password.</p>
+  <button class="btn" onclick="alert('Add your registered Deriv OAuth client ID and callback URL in the backend before enabling live authorization.')">Connect Deriv</button>
+  <p class="disclaimer">Live OAuth/API integration is intentionally not activated in this starter build until your Deriv application credentials and HTTPS callback URL are configured.</p>
+</div>
+</section>
+</main>
+
+<footer>
+  <b>MDV Traders</b> — Smart Signals. Automated Trading. Multiple Markets.
+  <p class="disclaimer">Risk warning: trading can result in loss of capital. Signals are not guarantees of profit. Use appropriate risk controls and test strategies on demo before live trading.</p>
+</footer>
+<script>
+function toggleBot(){
+ const b=document.getElementById('bot');
+ const on=b.textContent.includes('STOPPED');
+ b.textContent=on?'BOT RUNNING':'BOT STOPPED';
+ b.style.color=on?'#32d583':'#ff9aa5';
+ b.style.background=on?'#143326':'#3b2026';
+}
+</script>
+</body>
+</html>
