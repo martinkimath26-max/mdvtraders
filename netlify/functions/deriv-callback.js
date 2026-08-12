@@ -193,9 +193,8 @@ exports.handler = async function (event) {
       `mdv_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`,
       "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
       "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
-    ]
-  }
-      body: `
+    
+     body: `
         <!DOCTYPE html>
         <html>
         <head>
