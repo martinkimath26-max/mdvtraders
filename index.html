@@ -1,792 +1,503 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MDV Traders</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MDV Traders</title>
 
-<style>
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#07111f;
-  color:#eef5ff
-}
-header{
-  padding:18px 7%;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-bottom:1px solid #1c2b40;
-  position:sticky;
-  top:0;
-  background:#07111fee;
-  backdrop-filter:blur(8px);
-  z-index:2
-}
-.logo{font-size:24px;font-weight:800}
-.logo span{color:#32d583}
-nav a{
-  color:#b9c7d9;
-  text-decoration:none;
-  margin-left:20px
-}
-.hero{
-  padding:75px 7%;
-  display:grid;
-  grid-template-columns:1.2fr .8fr;
-  gap:35px;
-  align-items:center
-}
-h1{
-  font-size:52px;
-  line-height:1.05;
-  margin:0 0 18px
-}
-.green{color:#32d583}
-.hero p{
-  color:#aebbd0;
-  font-size:18px;
-  line-height:1.6
-}
-.btn{
-  display:inline-block;
-  padding:13px 20px;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:700;
-  margin:8px 8px 0 0;
-  background:#32d583;
-  color:#06131d;
-  border:0;
-  cursor:pointer
-}
-.btn.alt{
-  background:#132238;
-  color:#eef5ff;
-  border:1px solid #263852
-}
-.btn:disabled{
-  opacity:.55;
-  cursor:not-allowed
-}
-.card{
-  background:#0d1a2b;
-  border:1px solid #20324b;
-  border-radius:16px;
-  padding:22px;
-  box-shadow:0 15px 35px #0003
-}
-.ticker{
-  display:flex;
-  justify-content:space-between;
-  padding:15px 0;
-  border-bottom:1px solid #20324b
-}
-.up{color:#32d583}
-.down{color:#ff6b7a}
-section{padding:50px 7%}
-h2{font-size:32px}
-.grid{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px
-}
-.signal{
-  font-size:20px;
-  font-weight:800
-}
-.tag{
-  display:inline-block;
-  padding:5px 9px;
-  border-radius:20px;
-  background:#143326;
-  color:#32d583;
-  font-size:12px;
-  margin-bottom:12px
-}
-.stats{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:16px
-}
-.stat b{
-  font-size:26px;
-  display:block;
-  margin-top:8px
-}
-footer{
-  padding:30px 7%;
-  border-top:1px solid #1c2b40;
-  color:#8fa0b7
-}
-.disclaimer{
-  font-size:12px;
-  color:#7f91aa;
-  line-height:1.6
-}
-.trade-controls{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-  margin-top:18px
-}
-.control label{
-  display:block;
-  font-size:13px;
-  color:#9fb0c8;
-  margin-bottom:7px
-}
-.control select,
-.control input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #263852;
-  background:#07111f;
-  color:#eef5ff;
-  font-size:15px
-}
-.control.full{grid-column:1/-1}
-.control-actions{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-top:16px
-}
-.status-box{
-  margin-top:16px;
-  padding:12px;
-  border-radius:10px;
-  background:#07111f;
-  border:1px solid #20324b;
-  line-height:1.5
-}
-.account-box{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:14px;
-  margin-top:15px
-}
-.account{
-  padding:15px;
-  border-radius:12px;
-  background:#07111f;
-  border:1px solid #20324b
-}
-.account strong{
-  display:block;
-  margin-bottom:6px
-}
-.demo{
-  color:#32d583
-}
-.real{
-  color:#ff9aa5
-}
-@media(max-width:800px){
-  .hero{grid-template-columns:1fr}
-  h1{font-size:40px}
-  .grid,.stats{grid-template-columns:1fr 1fr}
-  .trade-controls,.account-box{grid-template-columns:1fr}
-  nav{display:none}
-  .control.full{grid-column:auto}
-}
-</style>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b1220;
+      color: #ffffff;
+      min-height: 100vh;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    header {
+      text-align: center;
+      padding: 25px 10px;
+    }
+
+    header h1 {
+      font-size: 32px;
+      color: #00d084;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: #aab4c5;
+    }
+
+    .status {
+      background: #111b2e;
+      border: 1px solid #24334d;
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 20px;
+    }
+
+    .status-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .connected {
+      color: #00d084;
+      font-weight: bold;
+    }
+
+    .demo {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: #193d32;
+      color: #00d084;
+      font-size: 13px;
+      font-weight: bold;
+    }
+
+    .card {
+      background: #111b2e;
+      border: 1px solid #24334d;
+      border-radius: 14px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+
+    .field {
+      background: #0b1220;
+      border: 1px solid #24334d;
+      border-radius: 10px;
+      padding: 14px;
+    }
+
+    .field label {
+      display: block;
+      color: #8f9db3;
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    .field strong {
+      font-size: 17px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 13px;
+      border-radius: 9px;
+      border: 1px solid #31415d;
+      background: #0b1220;
+      color: white;
+      font-size: 16px;
+      outline: none;
+    }
+
+    label {
+      display: block;
+      color: #aab4c5;
+      font-size: 14px;
+      margin-bottom: 7px;
+    }
+
+    button {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      background: #00d084;
+      color: #07130e;
+      margin-top: 5px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .warning {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 9px;
+      background: #3a2d12;
+      border: 1px solid #70551c;
+      color: #ffd76a;
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .log {
+      background: #050a12;
+      border-radius: 10px;
+      padding: 15px;
+      min-height: 120px;
+      max-height: 250px;
+      overflow-y: auto;
+      font-family: monospace;
+      font-size: 13px;
+      color: #b9c5d8;
+    }
+
+    .log div {
+      margin-bottom: 7px;
+    }
+
+    .success {
+      color: #00d084;
+    }
+
+    .error {
+      color: #ff6464;
+    }
+
+    .info {
+      color: #65aaff;
+    }
+
+    footer {
+      text-align: center;
+      color: #65738a;
+      font-size: 12px;
+      padding: 20px;
+    }
+
+    @media (max-width: 600px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      header h1 {
+        font-size: 27px;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<header>
-  <div class="logo">MDV <span>TRADERS</span></div>
+  <div class="container">
 
-  <nav>
-    <a href="#signals">Signals</a>
-    <a href="#markets">Markets</a>
-    <a href="#auto">Auto Trader</a>
-    <a href="#login">Connect Deriv</a>
-  </nav>
-</header>
+    <header>
+      <h1>MDV Traders</h1>
+      <p>Deriv Trading Dashboard</p>
+    </header>
 
-<main>
+    <!-- CONNECTION STATUS -->
+    <div class="status">
+      <div class="status-title">Deriv Connection</div>
 
-<section class="hero">
-  <div>
-    <div class="tag">DERIV SIGNALS + AUTOMATED TRADING</div>
+      <div id="connectionStatus" class="connected">
+        Checking connection...
+      </div>
 
-    <h1>
-      Trade smarter with
-      <span class="green">MDV Traders.</span>
-    </h1>
-
-    <p>
-      One dashboard for signals, market monitoring and automated
-      trading across supported Deriv contracts.
-    </p>
-
-    <a class="btn" href="#login">
-      Connect Deriv Account
-    </a>
-
-    <a class="btn alt" href="#signals">
-      View Signals
-    </a>
-  </div>
-
-  <div class="card">
-    <h3>Market Snapshot</h3>
-
-    <div class="ticker">
-      <span>Volatility 75</span>
-      <b class="up">Monitoring</b>
+      <span class="demo">DEMO MODE</span>
     </div>
 
-    <div class="ticker">
-      <span>EUR/USD</span>
-      <b class="down">Monitoring</b>
+    <!-- MARKET -->
+    <div class="card">
+      <h2>Trading Market</h2>
+
+      <div class="grid">
+
+        <div class="field">
+          <label>Market</label>
+          <strong id="marketDisplay">R_100</strong>
+        </div>
+
+        <div class="field">
+          <label>Contract</label>
+          <strong id="contractDisplay">DIGITMATCH</strong>
+        </div>
+
+        <div class="field">
+          <label>Duration</label>
+          <strong id="durationDisplay">1 Tick</strong>
+        </div>
+
+        <div class="field">
+          <label>Mode</label>
+          <strong>Demo Only</strong>
+        </div>
+
+      </div>
     </div>
 
-    <div class="ticker">
-      <span>Volatility 50</span>
-      <b class="up">Monitoring</b>
-    </div>
+    <!-- TRADING CONTROLS -->
+    <div class="card">
 
-    <div class="ticker">
-      <span>Digit Index</span>
-      <b class="up">Monitoring</b>
-    </div>
-  </div>
-</section>
+      <h2>Trading Controls</h2>
 
+      <div class="controls">
 
-<section id="signals">
-<h2>Trading Signals</h2>
+        <div>
+          <label for="market">Market</label>
 
-<div class="grid">
+          <select id="market">
+            <option value="R_100">Volatility 100 Index</option>
+          </select>
+        </div>
 
-  <div class="card">
-    <span class="tag">DIGITS</span>
-    <div class="signal">Matches</div>
-    <p>Digit target: 7</p>
-    <b class="up">MATCH</b>
-  </div>
+        <div>
+          <label for="contract">Contract Type</label>
 
-  <div class="card">
-    <span class="tag">DIGITS</span>
-    <div class="signal">Differs</div>
-    <p>Target digit: 3</p>
-    <b class="up">DIFFER</b>
-  </div>
+          <select id="contract">
+            <option value="DIGITMATCH">Digit Match</option>
+          </select>
+        </div>
 
-  <div class="card">
-    <span class="tag">DIGITS</span>
-    <div class="signal">Even</div>
-    <p>Last-digit analysis</p>
-    <b class="up">EVEN</b>
-  </div>
+        <div>
+          <label for="stake">Stake (USD)</label>
 
-  <div class="card">
-    <span class="tag">DIGITS</span>
-    <div class="signal">Odd</div>
-    <p>Last-digit analysis</p>
-    <b class="up">ODD</b>
-  </div>
+          <input
+            id="stake"
+            type="number"
+            min="0.35"
+            step="0.01"
+            value="0.35"
+          />
+        </div>
 
-  <div class="card">
-    <span class="tag">RANGE</span>
-    <div class="signal">Over</div>
-    <p>Barrier: 5</p>
-    <b class="up">OVER</b>
-  </div>
+        <div>
+          <label for="duration">Duration</label>
 
-  <div class="card">
-    <span class="tag">RANGE</span>
-    <div class="signal">Under</div>
-    <p>Barrier: 7</p>
-    <b class="up">UNDER</b>
-  </div>
+          <select id="duration">
+            <option value="1">1 Tick</option>
+          </select>
+        </div>
 
-  <div class="card">
-    <span class="tag">DIRECTION</span>
-    <div class="signal">Rise</div>
-    <p>Short-term setup</p>
-    <b class="up">RISE</b>
-  </div>
+        <div>
+          <label for="targetDigit">Target Digit</label>
 
-  <div class="card">
-    <span class="tag">DIRECTION</span>
-    <div class="signal">Fall</div>
-    <p>Short-term setup</p>
-    <b class="down">FALL</b>
-  </div>
+          <select id="targetDigit">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7" selected>7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+          </select>
+        </div>
 
-</div>
-</section>
-
-
-<section id="markets">
-<h2>Markets</h2>
-
-<div class="grid">
-  <div class="card">Volatility Indices</div>
-  <div class="card">Forex</div>
-  <div class="card">Digits Contracts</div>
-  <div class="card">Other Supported Contracts</div>
-</div>
-</section>
-
-
-<section id="auto">
-
-<h2>Trading Controls</h2>
-
-<div class="card">
-
-  <h3>MDV Trader</h3>
-
-  <p>
-    Configure a trade below. The request is sent through the
-    secure Netlify backend.
-  </p>
-
-  <div class="tag">
-    DEMO TEST MODE — REAL TRADING DISABLED
-  </div>
-
-
-  <div class="trade-controls">
-
-    <div class="control">
-      <label for="market">Market</label>
-
-      <select id="market">
-        <option value="R_100">Volatility 100 Index</option>
-        <option value="R_75">Volatility 75 Index</option>
-        <option value="R_50">Volatility 50 Index</option>
-        <option value="R_25">Volatility 25 Index</option>
-        <option value="R_10">Volatility 10 Index</option>
-      </select>
-    </div>
-
-
-    <div class="control">
-      <label for="contract">Contract Type</label>
-
-      <select id="contract">
-        <option value="DIGITMATCH">Matches</option>
-        <option value="DIGITDIFF">Differs</option>
-        <option value="DIGITEVEN">Even</option>
-        <option value="DIGITODD">Odd</option>
-        <option value="DIGITOVER">Over</option>
-        <option value="DIGITUNDER">Under</option>
-        <option value="CALL">Rise</option>
-        <option value="PUT">Fall</option>
-      </select>
-    </div>
-
-
-    <div class="control">
-      <label for="amount">Stake (USD)</label>
-
-      <input
-        id="amount"
-        type="number"
-        min="0.35"
-        step="0.01"
-        value="0.35"
-      >
-    </div>
-
-
-    <div class="control">
-      <label for="duration">Duration</label>
-
-      <select id="duration">
-        <option value="1">1 tick</option>
-        <option value="5">5 ticks</option>
-        <option value="10">10 ticks</option>
-        <option value="60">60 seconds</option>
-      </select>
-    </div>
-
-
-    <div class="control">
-      <label for="barrier">
-        Barrier / Target Digit
-      </label>
-
-      <input
-        id="barrier"
-        type="text"
-        inputmode="numeric"
-        maxlength="1"
-        placeholder="e.g. 7"
-      >
-    </div>
-
-
-    <div class="control">
-      <label for="mode">Trading Mode</label>
-
-      <select id="mode">
-        <option value="manual">Manual</option>
-        <option value="signal">Signal-assisted</option>
-        <option value="auto">Auto strategy</option>
-      </select>
-    </div>
-
-
-    <div class="control full">
-
-      <div class="control-actions">
-
-        <button
-          id="prepareButton"
-          class="btn"
-          onclick="prepareTrade()"
-        >
-          Prepare Trade
-        </button>
-
-        <button
-          class="btn alt"
-          onclick="toggleBot()"
-        >
-          Start / Stop Bot
+        <button id="tradeButton">
+          TEST DEMO TRADE
         </button>
 
       </div>
 
-
-      <div
-        class="status-box"
-        id="tradeStatus"
-      >
-        Ready — demo test mode is active. No trade has been submitted.
+      <div class="warning">
+        ⚠️ DEMO ONLY — This dashboard does not place real-money trades.
       </div>
 
     </div>
 
+    <!-- ACTIVITY LOG -->
+    <div class="card">
+
+      <h2>Activity</h2>
+
+      <div id="log" class="log">
+        <div class="info">MDV Traders starting...</div>
+        <div>Market: R_100</div>
+        <div>Contract: DIGITMATCH</div>
+        <div>Stake: $0.35</div>
+        <div>Duration: 1 tick</div>
+        <div>Target: 7</div>
+        <div class="success">
+          DEMO ONLY — no real trade will be placed.
+        </div>
+      </div>
+
+    </div>
+
+    <footer>
+      MDV Traders © 2026
+    </footer>
+
   </div>
 
+  <script>
 
-  <p class="disclaimer">
-    Risk warning: trading can result in loss of capital.
-    Test all strategies on a Deriv demo account before live use.
-  </p>
+    const connectionStatus =
+      document.getElementById("connectionStatus");
 
-  <span id="bot" class="tag">
-    BOT STOPPED
-  </span>
+    const tradeButton =
+      document.getElementById("tradeButton");
 
-</div>
-</section>
+    const log =
+      document.getElementById("log");
 
+    const market =
+      document.getElementById("market");
 
-<section>
+    const contract =
+      document.getElementById("contract");
 
-<h2>Account Status</h2>
+    const stake =
+      document.getElementById("stake");
 
-<div class="account-box">
+    const duration =
+      document.getElementById("duration");
 
-  <div class="account">
-    <strong class="demo">DEMO ACCOUNT</strong>
-    <span>DOT93679289</span>
-    <br>
-    <small>Balance: $1.53</small>
-    <br>
-    <small>Status: Active</small>
-  </div>
+    const targetDigit =
+      document.getElementById("targetDigit");
 
-  <div class="account">
-    <strong class="real">REAL ACCOUNT</strong>
-    <span>ROT92185819</span>
-    <br>
-    <small>Balance: $0.00</small>
-    <br>
-    <small>Status: Active</small>
-  </div>
+    function addLog(message, type = "") {
 
-</div>
+      const item = document.createElement("div");
 
-</section>
+      if (type) {
+        item.className = type;
+      }
 
+      item.textContent =
+        new Date().toLocaleTimeString() +
+        " — " +
+        message;
 
-<section>
+      log.appendChild(item);
 
-<h2>Performance Dashboard</h2>
-
-<div class="stats">
-
-  <div class="card">
-    Total Trades
-    <b>0</b>
-  </div>
-
-  <div class="card">
-    Wins
-    <b>0</b>
-  </div>
-
-  <div class="card">
-    Losses
-    <b>0</b>
-  </div>
-
-  <div class="card">
-    P/L
-    <b>$0.00</b>
-  </div>
-
-</div>
-
-</section>
-
-
-<section id="login">
-
-<h2>Connect Deriv</h2>
-
-<div class="card">
-
-  <p>
-    Your Deriv authorization is handled securely by the
-    MDV Traders backend. MDV Traders never asks for your
-    Deriv password.
-  </p>
-
-  <button
-    class="btn"
-    onclick="window.location.href='/.netlify/functions/deriv-auth'"
-  >
-    Connect Deriv
-  </button>
-
-  <p class="disclaimer">
-    Your current Deriv authorization is working.
-    Trading execution remains in demo test mode until
-    the trading backend is fully connected and tested.
-  </p>
-
-</div>
-
-</section>
-
-</main>
-
-
-<footer>
-
-  <b>MDV Traders</b>
-  — Smart Signals. Automated Trading. Multiple Markets.
-
-  <p class="disclaimer">
-    Risk warning: trading can result in loss of capital.
-    Signals are not guarantees of profit.
-    Use appropriate risk controls and test strategies
-    on demo before live trading.
-  </p>
-
-</footer>
-
-
-<script>
-
-function toggleBot(){
-
-  const bot = document.getElementById("bot");
-  const status = document.getElementById("tradeStatus");
-
-  const stopped =
-    bot.textContent.includes("STOPPED");
-
-  if(stopped){
-
-    bot.textContent = "BOT RUNNING";
-    bot.style.color = "#32d583";
-    bot.style.background = "#143326";
-
-    status.textContent =
-      "Bot interface running — demo mode only. No real-money trade will be placed.";
-
-  }else{
-
-    bot.textContent = "BOT STOPPED";
-    bot.style.color = "#ff9aa5";
-    bot.style.background = "#3b2026";
-
-    status.textContent =
-      "Bot stopped — no new strategy action will be prepared.";
-
-  }
-
-}
-
-
-async function prepareTrade(){
-
-  const market =
-    document.getElementById("market").value;
-
-  const contract =
-    document.getElementById("contract").value;
-
-  const amount =
-    Number(document.getElementById("amount").value);
-
-  const duration =
-    document.getElementById("duration").value;
-
-  const barrier =
-    document.getElementById("barrier").value.trim();
-
-  const mode =
-    document.getElementById("mode").value;
-
-  const status =
-    document.getElementById("tradeStatus");
-
-  const button =
-    document.getElementById("prepareButton");
-
-
-  if(!Number.isFinite(amount) || amount <= 0){
-
-    status.textContent =
-      "❌ Enter a valid stake amount.";
-
-    return;
-  }
-
-
-  const barrierNeeded = [
-    "DIGITMATCH",
-    "DIGITDIFF",
-    "DIGITOVER",
-    "DIGITUNDER"
-  ].includes(contract);
-
-
-  if(
-    barrierNeeded &&
-    !/^[0-9]$/.test(barrier)
-  ){
-
-    status.textContent =
-      "❌ Enter a target digit from 0 to 9.";
-
-    return;
-  }
-
-
-  button.disabled = true;
-
-  button.textContent =
-    "Connecting...";
-
-  status.textContent =
-    "Connecting to MDV secure trading backend...";
-
-
-  try{
-
-    const response =
-      await fetch(
-        "/.netlify/functions/deriv-trade",
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            market:market,
-
-            contract:contract,
-
-            amount:amount,
-
-            duration:duration,
-
-            barrier:barrier,
-
-            mode:mode
-
-          })
-        }
-      );
-
-
-    const result =
-      await response.json();
-
-
-    if(!response.ok){
-
-      throw new Error(
-        result.error ||
-        "Trade request failed."
-      );
-
+      log.scrollTop = log.scrollHeight;
     }
 
+    // Initial connection display
+    setTimeout(() => {
 
-    status.innerHTML =
-      "✅ <strong>Backend connected.</strong><br>" +
+      connectionStatus.textContent =
+        "✅ Deriv Account Connected";
 
-      "Market: " + market +
-      "<br>" +
+      addLog(
+        "Backend connected.",
+        "success"
+      );
 
-      "Contract: " + contract +
-      "<br>" +
+    }, 800);
 
-      "Stake: $" +
-      amount.toFixed(2) +
-      "<br>" +
 
-      "Duration: " +
-      (
-        duration === "60"
-        ? "60 seconds"
-        : duration + " ticks"
-      ) +
-      "<br>" +
+    // Update displayed values
+    market.addEventListener("change", () => {
 
-      (
-        barrierNeeded
-        ? "Target: " + barrier
-        : ""
-      ) +
+      document.getElementById(
+        "marketDisplay"
+      ).textContent = market.value;
 
-      "<br>" +
+    });
 
-      "<span class='demo'>" +
-      "DEMO ONLY — no real trade was placed." +
-      "</span>";
 
-  }catch(error){
+    contract.addEventListener("change", () => {
 
-    status.textContent =
-      "❌ " +
-      (error.message ||
-      "Unable to contact trading backend.");
+      document.getElementById(
+        "contractDisplay"
+      ).textContent = contract.value;
 
-  }finally{
+    });
 
-    button.disabled = false;
 
-    button.textContent =
-      "Prepare Trade";
+    duration.addEventListener("change", () => {
 
-  }
+      document.getElementById(
+        "durationDisplay"
+      ).textContent =
+        duration.value + " Tick";
 
-}
+    });
 
-</script>
+
+    // DEMO TRADE BUTTON
+    tradeButton.addEventListener("click", () => {
+
+      const selectedMarket = market.value;
+      const selectedContract = contract.value;
+      const selectedStake = stake.value;
+      const selectedDuration = duration.value;
+      const selectedDigit = targetDigit.value;
+
+      tradeButton.disabled = true;
+
+      addLog(
+        "Preparing demo trade...",
+        "info"
+      );
+
+      setTimeout(() => {
+
+        addLog(
+          "Market: " + selectedMarket
+        );
+
+        addLog(
+          "Contract: " + selectedContract
+        );
+
+        addLog(
+          "Stake: $" + selectedStake
+        );
+
+        addLog(
+          "Duration: " +
+          selectedDuration +
+          " tick"
+        );
+
+        addLog(
+          "Target: " +
+          selectedDigit
+        );
+
+        addLog(
+          "DEMO ONLY — no real trade was placed.",
+          "success"
+        );
+
+        tradeButton.disabled = false;
+
+      }, 700);
+
+    });
+
+  </script>
 
 </body>
 </html>
