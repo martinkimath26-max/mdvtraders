@@ -184,13 +184,17 @@ exports.handler = async function (event) {
       .join("");
 
     return {
-      statusCode: 200,
-      headers: {
-        "Content-Type": "text/html",
-        "Set-Cookie": [
-          `mdv_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`,
-          "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
-          "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+  statusCode: 200,
+  headers: {
+    "Content-Type": "text/html"
+  },
+  multiValueHeaders: {
+    "Set-Cookie": [
+      `mdv_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`,
+      "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+      "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+    ]
+  },
         ]
       },
       body: `
