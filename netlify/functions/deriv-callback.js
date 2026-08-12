@@ -194,9 +194,7 @@ exports.handler = async function (event) {
       "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
       "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
     ]
-  },
-        ]
-      },
+  }
       body: `
         <!DOCTYPE html>
         <html>
