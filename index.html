@@ -18,6 +18,14 @@ section{padding:50px 7%}h2{font-size:32px}.grid{display:grid;grid-template-colum
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}.stat b{font-size:26px;display:block;margin-top:8px}
 footer{padding:30px 7%;border-top:1px solid #1c2b40;color:#8fa0b7}
 .disclaimer{font-size:12px;color:#7f91aa;line-height:1.6}
+.trade-controls{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-top:18px}
+.control label{display:block;font-size:13px;color:#9fb0c8;margin-bottom:7px}
+.control select,.control input{width:100%;padding:12px;border-radius:10px;border:1px solid #263852;background:#07111f;color:#eef5ff;font-size:15px}
+.control.full{grid-column:1/-1}
+.control-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.status-box{margin-top:16px;padding:12px;border-radius:10px;background:#07111f;border:1px solid #20324b}
+@media(max-width:800px){.trade-controls{grid-template-columns:1fr}.control.full{grid-column:auto}}
+
 @media(max-width:800px){.hero{grid-template-columns:1fr}h1{font-size:40px}.grid,.stats{grid-template-columns:1fr 1fr}nav{display:none}}
 </style>
 </head>
@@ -68,13 +76,77 @@ footer{padding:30px 7%;border-top:1px solid #1c2b40;color:#8fa0b7}
 </section>
 
 <section id="auto">
-<h2>Automated Trading</h2>
+<h2>Trading Controls</h2>
 <div class="card">
-  <h3>MDV Auto Trader</h3>
-  <p>Select a market, contract type and risk settings, then start or stop your authorized strategy.</p>
-  <button class="btn" onclick="toggleBot()">Start Bot</button>
+  <h3>MDV Trader</h3>
+  <p>Choose the market and contract settings below. Live order execution must remain behind the secure Deriv-authorized backend.</p>
+
+  <div class="trade-controls">
+    <div class="control">
+      <label for="market">Market</label>
+      <select id="market">
+        <option value="R_100">Volatility 100 Index</option>
+        <option value="R_75">Volatility 75 Index</option>
+        <option value="R_50">Volatility 50 Index</option>
+        <option value="R_25">Volatility 25 Index</option>
+        <option value="R_10">Volatility 10 Index</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="contract">Contract type</label>
+      <select id="contract">
+        <option value="DIGITMATCH">Matches</option>
+        <option value="DIGITDIFF">Differs</option>
+        <option value="DIGITEVEN">Even</option>
+        <option value="DIGITODD">Odd</option>
+        <option value="DIGITOVER">Over</option>
+        <option value="DIGITUNDER">Under</option>
+        <option value="CALL">Rise</option>
+        <option value="PUT">Fall</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="amount">Stake (USD)</label>
+      <input id="amount" type="number" min="0.35" step="0.01" value="0.35">
+    </div>
+
+    <div class="control">
+      <label for="duration">Duration</label>
+      <select id="duration">
+        <option value="1">1 tick</option>
+        <option value="5">5 ticks</option>
+        <option value="10">10 ticks</option>
+        <option value="60">60 seconds</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <label for="barrier">Barrier / target digit</label>
+      <input id="barrier" type="text" inputmode="numeric" maxlength="1" placeholder="e.g. 7">
+    </div>
+
+    <div class="control">
+      <label for="mode">Trading mode</label>
+      <select id="mode">
+        <option value="manual">Manual</option>
+        <option value="signal">Signal-assisted</option>
+        <option value="auto">Auto strategy</option>
+      </select>
+    </div>
+
+    <div class="control full">
+      <div class="control-actions">
+        <button class="btn" onclick="prepareTrade()">Prepare Trade</button>
+        <button class="btn alt" onclick="toggleBot()">Start/Stop Bot</button>
+      </div>
+      <div class="status-box" id="tradeStatus">Ready — no trade has been submitted.</div>
+    </div>
+  </div>
+
+  <p class="disclaimer">Risk warning: a trade can lose the stake. Test all strategies on a Deriv demo account before live use.</p>
   <span id="bot" class="tag">BOT STOPPED</span>
-  <p class="disclaimer">This demo interface does not place trades. Live trading requires a secure Deriv authorization and backend API integration.</p>
 </div>
 </section>
 
@@ -109,7 +181,40 @@ function toggleBot(){
  b.textContent=on?'BOT RUNNING':'BOT STOPPED';
  b.style.color=on?'#32d583':'#ff9aa5';
  b.style.background=on?'#143326':'#3b2026';
+ document.getElementById('tradeStatus').textContent =
+   on ? 'Strategy interface running — live execution is controlled by the secure backend.'
+      : 'Bot stopped — no new strategy action will be prepared.';
+}
+
+function prepareTrade(){
+ const market=document.getElementById('market').value;
+ const contract=document.getElementById('contract').value;
+ const amount=Number(document.getElementById('amount').value);
+ const duration=document.getElementById('duration').value;
+ const barrier=document.getElementById('barrier').value.trim();
+ const mode=document.getElementById('mode').value;
+ const status=document.getElementById('tradeStatus');
+
+ if(!Number.isFinite(amount) || amount <= 0){
+   status.textContent='Enter a valid stake amount.';
+   return;
+ }
+
+ const barrierNeeded=['DIGITMATCH','DIGITDIFF','DIGITOVER','DIGITUNDER'].includes(contract);
+ if(barrierNeeded && !/^[0-9]$/.test(barrier)){
+   status.textContent='Enter a target digit from 0 to 9 for this contract.';
+   return;
+ }
+
+ status.textContent=[
+   'Prepared (not submitted)', market, contract,
+   'Stake $'+amount.toFixed(2),
+   duration === '60' ? '60 seconds' : duration+' ticks',
+   barrierNeeded ? 'Target '+barrier : '',
+   mode+' mode'
+ ].filter(Boolean).join(' • ');
 }
 </script>
 </body>
-</html>
+  </html>
+  
