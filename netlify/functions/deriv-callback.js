@@ -1,3 +1,5 @@
+const crypto = require("crypto");
+
 exports.handler = async function (event) {
   const params = event.queryStringParameters || {};
 
@@ -56,7 +58,6 @@ exports.handler = async function (event) {
     "https://mdvtraders.netlify.app/.netlify/functions/deriv-callback";
 
   try {
-    // Exchange authorization code for access token
     const tokenResponse = await fetch(
       "https://auth.deriv.com/oauth2/token",
       {
@@ -89,7 +90,51 @@ exports.handler = async function (event) {
 
     const accessToken = tokenData.access_token;
 
-    // Get the user's Deriv Options accounts
+    // Create a private MDV Traders session identifier.
+    const sessionToken = crypto.randomUUID();
+
+    const expiresAt = tokenData.expires_in
+      ? new Date(Date.now() + tokenData.expires_in * 1000).toISOString()
+      : null;
+
+    // Store the Deriv token securely in Supabase.
+    const supabaseUrl = process.env.SUPABASE_URL;
+    const supabaseServiceKey =
+      process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+    if (!supabaseUrl || !supabaseServiceKey) {
+      throw new Error("Supabase environment variables are missing.");
+    }
+
+    const saveResponse = await fetch(
+      `${supabaseUrl}/rest/v1/deriv_sessions`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "apikey": supabaseServiceKey,
+          "Authorization": `Bearer ${supabaseServiceKey}`,
+          "Prefer": "return=minimal"
+        },
+        body: JSON.stringify({
+          session_token: sessionToken,
+          access_token: accessToken,
+          expires_at: expiresAt
+        })
+      }
+    );
+
+    if (!saveResponse.ok) {
+      const saveError = await saveResponse.text();
+
+      return {
+        statusCode: 500,
+        headers: { "Content-Type": "text/plain" },
+        body: "Failed to securely save Deriv session: " + saveError
+      };
+    }
+
+    // Get the user's Deriv Options accounts.
     const accountResponse = await fetch(
       "https://api.derivws.com/trading/v1/options/accounts",
       {
@@ -108,7 +153,8 @@ exports.handler = async function (event) {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          error: "Connected successfully, but account information could not be retrieved.",
+          error:
+            "Connected successfully, but account information could not be retrieved.",
           details: accountData
         })
       };
@@ -117,23 +163,32 @@ exports.handler = async function (event) {
     const accounts = accountData.data || [];
 
     const accountList = accounts
-      .map(account => `
+      .map(
+        (account) => `
         <div style="margin:15px 0;padding:15px;border:1px solid #ddd;border-radius:8px;">
-          <p><strong>Account:</strong> ${account.account_id || "N/A"}</p>
-          <p><strong>Balance:</strong> ${account.balance ?? "N/A"} ${account.currency || ""}</p>
-          <p><strong>Type:</strong> ${account.account_type || "N/A"}</p>
-          <p><strong>Status:</strong> ${account.status || "N/A"}</p>
+          <p><strong>Account:</strong> ${
+            account.account_id || "N/A"
+          }</p>
+          <p><strong>Balance:</strong> ${
+            account.balance ?? "N/A"
+          } ${account.currency || ""}</p>
+          <p><strong>Type:</strong> ${
+            account.account_type || "N/A"
+          }</p>
+          <p><strong>Status:</strong> ${
+            account.status || "N/A"
+          }</p>
         </div>
-      `)
+      `
+      )
       .join("");
 
     return {
       statusCode: 200,
       headers: {
-        "Content-Type": "text/html"
-      },
-      multiValueHeaders: {
+        "Content-Type": "text/html",
         "Set-Cookie": [
+          `mdv_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`,
           "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
           "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
         ]
@@ -152,12 +207,15 @@ exports.handler = async function (event) {
           ${accountList || "<p>No Options account was returned.</p>"}
 
           <p>Your Deriv authorization is working.</p>
+          <p>Your secure trading session has been created.</p>
         </body>
         </html>
       `
     };
 
   } catch (error) {
+    console.error("Deriv callback error:", error);
+
     return {
       statusCode: 500,
       headers: { "Content-Type": "text/plain" },
