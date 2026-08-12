@@ -6,7 +6,9 @@ exports.handler = async function (event) {
   if (params.error) {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "text/html" },
+      headers: {
+        "Content-Type": "text/html"
+      },
       body: `
         <h2>MDV Traders</h2>
         <p>Deriv authorization was not completed.</p>
@@ -18,7 +20,9 @@ exports.handler = async function (event) {
   if (!params.code || !params.state) {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
+      headers: {
+        "Content-Type": "text/plain"
+      },
       body: "Missing authorization code or state."
     };
   }
@@ -39,7 +43,9 @@ exports.handler = async function (event) {
   if (!savedState || !codeVerifier) {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
+      headers: {
+        "Content-Type": "text/plain"
+      },
       body: "PKCE session information is missing."
     };
   }
@@ -47,7 +53,9 @@ exports.handler = async function (event) {
   if (savedState !== params.state) {
     return {
       statusCode: 400,
-      headers: { "Content-Type": "text/plain" },
+      headers: {
+        "Content-Type": "text/plain"
+      },
       body: "Invalid OAuth state."
     };
   }
@@ -58,6 +66,7 @@ exports.handler = async function (event) {
     "https://mdvtraders.netlify.app/.netlify/functions/deriv-callback";
 
   try {
+    // Exchange authorization code for Deriv access token
     const tokenResponse = await fetch(
       "https://auth.deriv.com/oauth2/token",
       {
@@ -80,7 +89,9 @@ exports.handler = async function (event) {
     if (!tokenResponse.ok || !tokenData.access_token) {
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           error: "Token exchange failed",
           details: tokenData
@@ -90,22 +101,27 @@ exports.handler = async function (event) {
 
     const accessToken = tokenData.access_token;
 
-    // Create a private MDV Traders session identifier.
+    // Create private MDV Traders session
     const sessionToken = crypto.randomUUID();
 
     const expiresAt = tokenData.expires_in
-      ? new Date(Date.now() + tokenData.expires_in * 1000).toISOString()
+      ? new Date(
+          Date.now() + tokenData.expires_in * 1000
+        ).toISOString()
       : null;
 
-    // Store the Deriv token securely in Supabase.
+    // Supabase environment variables
     const supabaseUrl = process.env.SUPABASE_URL;
     const supabaseServiceKey =
       process.env.SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !supabaseServiceKey) {
-      throw new Error("Supabase environment variables are missing.");
+      throw new Error(
+        "Supabase environment variables are missing."
+      );
     }
 
+    // Save Deriv session securely in Supabase
     const saveResponse = await fetch(
       `${supabaseUrl}/rest/v1/deriv_sessions`,
       {
@@ -129,12 +145,16 @@ exports.handler = async function (event) {
 
       return {
         statusCode: 500,
-        headers: { "Content-Type": "text/plain" },
-        body: "Failed to securely save Deriv session: " + saveError
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body:
+          "Failed to securely save Deriv session: " +
+          saveError
       };
     }
 
-    // Get the user's Deriv Options accounts.
+    // Get Deriv Options accounts
     const accountResponse = await fetch(
       "https://api.derivws.com/trading/v1/options/accounts",
       {
@@ -151,7 +171,9 @@ exports.handler = async function (event) {
     if (!accountResponse.ok) {
       return {
         statusCode: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json"
+        },
         body: JSON.stringify({
           error:
             "Connected successfully, but account information could not be retrieved.",
@@ -166,61 +188,104 @@ exports.handler = async function (event) {
       .map(
         (account) => `
         <div style="margin:15px 0;padding:15px;border:1px solid #ddd;border-radius:8px;">
-          <p><strong>Account:</strong> ${
-            account.account_id || "N/A"
-          }</p>
-          <p><strong>Balance:</strong> ${
-            account.balance ?? "N/A"
-          } ${account.currency || ""}</p>
-          <p><strong>Type:</strong> ${
-            account.account_type || "N/A"
-          }</p>
-          <p><strong>Status:</strong> ${
-            account.status || "N/A"
-          }</p>
+          <p>
+            <strong>Account:</strong>
+            ${account.account_id || "N/A"}
+          </p>
+
+          <p>
+            <strong>Balance:</strong>
+            ${account.balance ?? "N/A"}
+            ${account.currency || ""}
+          </p>
+
+          <p>
+            <strong>Type:</strong>
+            ${account.account_type || "N/A"}
+          </p>
+
+          <p>
+            <strong>Status:</strong>
+            ${account.status || "N/A"}
+          </p>
         </div>
       `
       )
       .join("");
 
+    // Successful response
     return {
-  statusCode: 200,
-  headers: {
-    "Content-Type": "text/html"
-  },
-  multiValueHeaders: {
-    "Set-Cookie": [
-      `mdv_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`,
-      "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
-      "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
-    
-     body: `
+      statusCode: 200,
+
+      headers: {
+        "Content-Type": "text/html"
+      },
+
+      multiValueHeaders: {
+        "Set-Cookie": [
+          `mdv_session=${sessionToken}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=3600`,
+          "deriv_state=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0",
+          "deriv_verifier=; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=0"
+        ]
+      },
+
+      body: `
         <!DOCTYPE html>
+
         <html>
+
         <head>
           <title>MDV Traders</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1">
+
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1"
+          >
         </head>
-        <body style="font-family:Arial,sans-serif;padding:30px;">
+
+        <body
+          style="
+            font-family: Arial, sans-serif;
+            padding: 30px;
+          "
+        >
+
           <h2>MDV Traders</h2>
+
           <h3>✅ Deriv Account Connected</h3>
 
-          ${accountList || "<p>No Options account was returned.</p>"}
+          ${
+            accountList ||
+            "<p>No Options account was returned.</p>"
+          }
 
-          <p>Your Deriv authorization is working.</p>
-          <p>Your secure trading session has been created.</p>
+          <p>
+            Your Deriv authorization is working.
+          </p>
+
+          <p>
+            Your secure trading session has been created.
+          </p>
+
         </body>
+
         </html>
       `
     };
 
   } catch (error) {
-    console.error("Deriv callback error:", error);
+    console.error(
+      "Deriv callback error:",
+      error
+    );
 
     return {
       statusCode: 500,
-      headers: { "Content-Type": "text/plain" },
-      body: "Server error while connecting to Deriv."
+      headers: {
+        "Content-Type": "text/plain"
+      },
+      body:
+        "Server error while connecting to Deriv."
     };
   }
 };
